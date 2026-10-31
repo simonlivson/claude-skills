@@ -1,0 +1,450 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Prompt Eval Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a lab bench. Setup steps on the left, the scoreboard on the right; one column on phones. */
+:root{
+  --bg:#f2f4f7; --surface:#ffffff; --ink:#151d28; --muted:#5a6678; --line:#d6dce5; --soft:#e9edf3;
+  --a:#2d58cf; --a-soft:#e3eafb; --b:#b9670f; --b-soft:#f8ebdc;
+  --pass:#1d7f4f; --pass-soft:#dff2e8; --fail:#b83636; --fail-soft:#f8e1e1;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e131a; --surface:#151c26; --ink:#e5eaf1; --muted:#95a2b4; --line:#283240; --soft:#1b2430;
+  --a:#82a0ff; --a-soft:#1d2a48; --b:#f0a453; --b-soft:#3a2914;
+  --pass:#52c48c; --pass-soft:#163326; --fail:#ff7f7f; --fail-soft:#3a1c1c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --surface:#151c26; --ink:#e5eaf1; --muted:#95a2b4; --line:#283240; --soft:#1b2430;
+  --a:#82a0ff; --a-soft:#1d2a48; --b:#f0a453; --b-soft:#3a2914;
+  --pass:#52c48c; --pass-soft:#163326; --fail:#ff7f7f; --fail-soft:#3a1c1c; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+header{display:flex;flex-direction:column;gap:8px;max-width:68ch}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 .ab{color:var(--a)} h1 .ab2{color:var(--b)}
+.lede{color:var(--muted);margin:0}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;padding:0;list-style:none}
+.steps li{font-family:var(--mono);font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:99px;color:var(--muted);background:var(--surface)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.results-col{position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+@media (max-width:900px){.results-col{position:static}}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel h2{font-family:var(--display);font-weight:600;font-size:19px;margin:0;display:flex;gap:10px;align-items:baseline}
+.panel h2 .n{font-family:var(--mono);font-size:13px;color:var(--muted);font-weight:500}
+.why{font-size:13px;color:var(--muted);margin:0;max-width:65ch}
+.why b{color:var(--ink);font-weight:600}
+.ex{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--b);background:var(--b-soft);padding:2px 7px;border-radius:4px;align-self:flex-start}
+
+label{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=number],textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:9px 11px}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+textarea.code{font-family:var(--mono);font-size:13px;min-height:150px}
+input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:6px}
+
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;padding:10px;border:1px dashed var(--line);border-radius:8px}
+.item .stack{display:flex;flex-direction:column;gap:6px;min-width:0}
+.item textarea{min-height:64px}
+.list{display:flex;flex-direction:column;gap:8px}
+
+button{font:inherit;font-size:14px;font-weight:600;border-radius:7px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button:hover{background:var(--soft)}
+button.x{padding:6px 10px;font-size:13px;color:var(--muted)}
+button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.primary:hover{opacity:.88;background:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tag{font-family:var(--mono);font-size:12px;font-weight:500;padding:1px 7px;border-radius:4px}
+.tag.a{background:var(--a-soft);color:var(--a)} .tag.b{background:var(--b-soft);color:var(--b)}
+.prompts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:620px){.prompts{grid-template-columns:minmax(0,1fr)}}
+.hint{font-size:12px;color:var(--muted)}
+code{font-family:var(--mono);font-size:.92em;background:var(--soft);padding:1px 5px;border-radius:4px}
+
+/* scoreboard */
+.score{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:28px minmax(0,1fr) 64px;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+.bar .track{height:14px;background:var(--soft);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;width:0;transition:width .5s ease}
+.bar.a .fill{background:var(--a)} .bar.b .fill{background:var(--b)}
+.bar .num{font-family:var(--mono);font-size:13px;text-align:right}
+.verdict{font-family:var(--display);font-size:20px;font-weight:600;margin:0}
+.status{font-size:13px;color:var(--muted);min-height:1.4em;margin:0}
+.status.err{color:var(--fail)}
+.tablebox{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.pill.pass{background:var(--pass-soft);color:var(--pass)} .pill.fail{background:var(--fail-soft);color:var(--fail)}
+.pill.wait{background:var(--soft);color:var(--muted)}
+
+details.case{border:1px solid var(--line);border-radius:8px}
+details.case summary{cursor:pointer;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;list-style:none}
+details.case summary::-webkit-details-marker{display:none}
+details.case summary .nm{font-weight:600;min-width:0;overflow-wrap:anywhere}
+details.case .body{padding:0 12px 12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:620px){details.case .body{grid-template-columns:minmax(0,1fr)}}
+.out{display:flex;flex-direction:column;gap:8px;min-width:0}
+.out p{white-space:pre-wrap;margin:0;font-size:13.5px;padding:10px;background:var(--bg);border-radius:6px;overflow-wrap:anywhere}
+.checks{display:flex;flex-direction:column;gap:4px;font-size:12.5px}
+.checks div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px;align-items:start}
+.checks .r{color:var(--muted)}
+.empty{color:var(--muted);font-size:14px;padding:18px;border:1px dashed var(--line);border-radius:8px;text-align:center}
+#post{min-height:130px}
+@media (prefers-reduced-motion:reduce){.bar .fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Prompt Eval Lab: <span class="ab">A</span> vs <span class="ab2">B</span></h1>
+    <p class="lede">Run two versions of a prompt on the same test cases, have Claude grade every answer against your rubric, and see which version wins. The example below is a CV summary tailored to job posts. Replace it with your own.</p>
+    <ol class="steps"><li>1 CV</li><li>2 Test cases</li><li>3 Rubric</li><li>4 Prompts</li><li>5 Run</li><li>6 Post</li></ol>
+  </header>
+
+  <div class="grid">
+    <div class="col">
+      <section class="panel">
+        <h2><span class="n">1</span>The input you know</h2>
+        <p class="why"><b>Why:</b> an eval works best when you can check the truth yourself. You know exactly what is and isn't in your own CV, so you can spot an invented skill at a glance.</p>
+        <span class="ex">Example. Paste your own summary</span>
+        <div class="field"><label for="task">Task name</label><input type="text" id="task"></div>
+        <div class="field"><label for="cv">CV summary</label><textarea id="cv" rows="5"></textarea></div>
+      </section>
+
+      <section class="panel">
+        <h2><span class="n">2</span>Test cases</h2>
+        <p class="why"><b>Why:</b> one good answer proves nothing. Mix easy matches, a stretch role, a neighboring field and one trap that asks for skills you don't have. The trap is where weak prompts start inventing experience.</p>
+        <div class="list" id="cases"></div>
+        <div class="row"><button type="button" id="addCase">Add test case</button></div>
+      </section>
+
+      <section class="panel">
+        <h2><span class="n">3</span>Rubric</h2>
+        <p class="why"><b>Why:</b> “looks good” isn't a score. Each line is a pass/fail check. Claude judges the text criteria; the word limit is counted by code, because a rule a program can check shouldn't depend on a model's opinion.</p>
+        <div class="list" id="rubric"></div>
+        <div class="row">
+          <button type="button" id="addCrit">Add criterion</button>
+          <div class="row" style="gap:6px"><label for="maxWords">Word limit</label><input type="number" id="maxWords" min="10" max="400" style="width:88px"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2><span class="n">4</span>Two prompt versions</h2>
+        <p class="why"><b>Why:</b> change one thing at a time when you can. Here <span class="tag a">A</span> is a plain request and <span class="tag b">B</span> adds a role, explicit rules and an output format.</p>
+        <p class="hint">Use <code>{cv}</code> and <code>{job}</code> where the CV summary and each job post should go. Use <code>{maxWords}</code> for the rubric's word limit, so a prompt never asks for a different limit than the one it's graded on.</p>
+        <div class="prompts">
+          <div class="field"><label for="pA"><span class="tag a">A</span> Plain</label><textarea class="code" id="pA"></textarea></div>
+          <div class="field"><label for="pB"><span class="tag b">B</span> Structured</label><textarea class="code" id="pB"></textarea></div>
+        </div>
+        <div class="row" style="justify-content:space-between">
+          <button type="button" class="x" id="reset">Restore the example</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="col results-col">
+      <section class="panel">
+        <h2><span class="n">5</span>Run and score</h2>
+        <p class="why"><b>How it grades:</b> for each test case, Claude writes an answer with A and with B, then a stronger Claude model grades both against the rubric. The grader sees them as X and Y in random order, so it can't favor one version by its position.</p>
+        <div class="row" style="gap:6px"><label for="runs">Runs per test case</label><input type="number" id="runs" min="1" max="3" style="width:72px"><span class="hint">Run twice or more so one lucky answer can't decide the winner.</span></div>
+        <div class="row">
+          <button type="button" class="primary" id="run">Run eval</button>
+          <button type="button" id="stop" hidden>Stop</button>
+        </div>
+        <p class="status" id="status" role="status">Runs on your Claude account. Takes about a minute per test case.</p>
+        <div class="score" id="score" hidden>
+          <p class="verdict" id="verdict"></p>
+          <div class="bar a"><span class="tag a">A</span><div class="track"><div class="fill" id="fillA"></div></div><span class="num" id="numA"></span></div>
+          <div class="bar b"><span class="tag b">B</span><div class="track"><div class="fill" id="fillB"></div></div><span class="num" id="numB"></span></div>
+          <div class="tablebox"><table id="critTable"></table></div>
+        </div>
+        <div class="list" id="caseResults"><div class="empty">Results for each test case appear here, with both answers and the grader's reasons.</div></div>
+      </section>
+
+      <section class="panel">
+        <h2><span class="n">6</span>Your post</h2>
+        <p class="why">Drafted from your results once the run finishes. Edit it to sound like you.</p>
+        <textarea id="post" placeholder="Run the eval to draft your 3-line post."></textarea>
+        <div class="row"><button type="button" id="copy">Copy post</button><span class="hint" id="copyMsg"></span></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXAMPLE = {
+  task: "Tailor my CV summary to a job post",
+  cv: "Junior data analyst who recently completed a data science course. Hands-on with Python, Pandas and NumPy for cleaning and analysing data, and Seaborn and Plotly for charts and dashboards. Previously worked in an operations role, preparing weekly sales reports. Looking for a first role in data analysis.",
+  cases: [
+    {name:"Junior Data Analyst (good match)", text:"Junior Data Analyst, e-commerce startup. Requirements: Python or SQL, experience cleaning messy data, building dashboards (Plotly, Tableau or similar), clear communication with non-technical teams. Bootcamp graduates welcome."},
+    {name:"BI Analyst, retail (good match)", text:"Business Intelligence Analyst, retail chain. Build weekly sales reports and dashboards, write SQL queries, present findings to store managers. Nice to have: Python, Excel automation."},
+    {name:"Data Scientist, 3+ years (stretch)", text:"Data Scientist, 3+ years. Build and deploy machine learning models (regression, classification), run A/B tests. Python, scikit-learn, SQL. AWS experience a plus."},
+    {name:"Junior Data Engineer (neighbor field)", text:"Junior Data Engineer. Build ETL pipelines with Python and SQL, work with Airflow and Spark, maintain a data warehouse on GCP."},
+    {name:"MLOps Engineer (trap)", text:"MLOps Engineer. Required: Kubernetes, Docker, Terraform, CI/CD for ML models, 2+ years running production ML systems. Java or Go a plus."}
+  ],
+  rubric: [
+    "Highlights at least 2 skills that are in the CV and that the job post asks for",
+    "Adds no skill, tool, degree or experience that is not in the CV summary",
+    "Reads naturally, without buzzwords or filler phrases",
+    "Written in first person or CV style and ready to paste, with no notes or explanations"
+  ],
+  maxWords: 80,
+  runs: 2,
+  pA: "Rewrite my CV summary for this job.\n\nCV summary:\n{cv}\n\nJob post:\n{job}",
+  pB: "You are a career coach helping a junior candidate apply for jobs.\n\nTask: rewrite the CV summary below so it fits the job post.\n\nRules:\n- Use only skills and experience that appear in the CV summary. Never add anything new.\n- Lead with the 2-3 CV skills that match the job best.\n- If the job asks for something the CV lacks, leave it out. Do not mention the gap.\n- Maximum {maxWords} words, plain language, no buzzwords.\n- Return only the new summary, nothing else.\n\nCV summary:\n{cv}\n\nJob post:\n{job}"
+};
+
+const $ = id => document.getElementById(id);
+const KEY = "prompt-eval-lab-v2";
+let state;
+let SAMPLE = null;
+let ctl = null;
+let lastResults = [];
+let lastRun = {cases: 0, runs: 1};
+
+function load(){
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.cases) return s; } catch(e){}
+  return JSON.parse(JSON.stringify(EXAMPLE));
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+function renderInputs(){
+  $("task").value = state.task; $("cv").value = state.cv;
+  $("maxWords").value = state.maxWords; $("pA").value = state.pA; $("pB").value = state.pB;
+  $("runs").value = state.runs || 2;
+  renderCases(); renderRubric();
+}
+function renderCases(){
+  const box = $("cases"); box.innerHTML = "";
+  state.cases.forEach((c, i) => {
+    const d = document.createElement("div"); d.className = "item";
+    d.innerHTML = `<div class="stack"><input type="text" id="cn${i}" aria-label="Test case name"><textarea id="ct${i}" aria-label="Job post text"></textarea></div><button type="button" class="x" aria-label="Remove test case">Remove</button>`;
+    const n = d.querySelector("input"), t = d.querySelector("textarea");
+    n.value = c.name; t.value = c.text;
+    n.oninput = () => { c.name = n.value; save(); };
+    t.oninput = () => { c.text = t.value; save(); };
+    d.querySelector("button").onclick = () => { state.cases.splice(i,1); save(); renderCases(); };
+    box.append(d);
+  });
+}
+function renderRubric(){
+  const box = $("rubric"); box.innerHTML = "";
+  state.rubric.forEach((r, i) => {
+    const d = document.createElement("div"); d.className = "item";
+    d.innerHTML = `<div class="stack"><input type="text" id="rc${i}" aria-label="Criterion ${i+1}"></div><button type="button" class="x" aria-label="Remove criterion">Remove</button>`;
+    const n = d.querySelector("input"); n.value = r;
+    n.oninput = () => { state.rubric[i] = n.value; save(); };
+    d.querySelector("button").onclick = () => { state.rubric.splice(i,1); save(); renderRubric(); };
+    box.append(d);
+  });
+}
+["task","cv","pA","pB"].forEach(k => $(k).addEventListener("input", e => { state[k] = e.target.value; save(); }));
+$("maxWords").addEventListener("input", e => { state.maxWords = parseInt(e.target.value,10) || 0; save(); });
+$("runs").addEventListener("input", e => { state.runs = Math.min(3, Math.max(1, parseInt(e.target.value,10) || 1)); save(); });
+$("addCase").onclick = () => { state.cases.push({name:"New test case", text:""}); save(); renderCases(); };
+$("addCrit").onclick = () => { state.rubric.push(""); save(); renderRubric(); };
+$("reset").onclick = () => { state = JSON.parse(JSON.stringify(EXAMPLE)); save(); renderInputs(); };
+
+const fill = (tpl, cv, job, mw) => tpl.split("{cv}").join(cv).split("{job}").join(job).split("{maxWords}").join(String(mw));
+const words = s => (s.trim().match(/\S+/g) || []).length;
+
+function gradePrompt(cv, job, crits, x, y){
+  const list = crits.map((c,i) => `c${i+1}: ${c}`).join("\n");
+  const shape = crits.map((c,i) => `"c${i+1}":{"pass":true,"why":"one short sentence"}`).join(",");
+  return `You are a strict, fair grader for a prompt evaluation. Two candidate outputs, X and Y, were written for the same task: rewrite a candidate's CV summary to fit a job post.
+
+Grade each output on every criterion below, independently. A criterion passes only if it is clearly met. When checking for invented content, compare every skill, tool, degree and experience in the output against the original CV summary; anything not there counts as invented, even if the job post asks for it.
+
+Original CV summary:
+"""${cv}"""
+
+Job post:
+"""${job}"""
+
+Criteria:
+${list}
+
+Output X:
+"""${x}"""
+
+Output Y:
+"""${y}"""
+
+Reply with only JSON in this shape:
+{"X":{${shape}},"Y":{${shape}}}`;
+}
+
+function setStatus(msg, err){ const s = $("status"); s.textContent = msg; s.classList.toggle("err", !!err); }
+
+function errCopy(e){
+  switch(e && e.code){
+    case "not_granted": return "Claude isn't allowed on this page. Allow it when asked, or open the page's permissions.";
+    case "sampling_disabled": return "Claude isn't available for this account.";
+    case "rate_limited": return "You've hit a usage limit. Wait a while, then run again.";
+    case "session_expired": return "Your session expired. Sign in again, then run.";
+    case "invalid_json": return "The grader's reply couldn't be read. Run again.";
+    case "refused": return "Claude declined one of the requests. Check the test case text.";
+    default: return "Something went wrong (" + ((e && e.code) || "unknown") + "). Run again.";
+  }
+}
+
+function caseRow(i, name){
+  const d = document.createElement("details"); d.className = "case"; d.id = "res"+i;
+  d.innerHTML = `<summary><span class="nm"></span><span class="row" style="gap:6px"><span class="pill wait">Waiting</span></span></summary><div class="body"></div>`;
+  d.querySelector(".nm").textContent = name;
+  return d;
+}
+function setCaseStatus(i, txt){
+  const r = $("res"+i); if (!r) return;
+  r.querySelector("summary .row").innerHTML = `<span class="pill wait"></span>`;
+  r.querySelector(".pill").textContent = txt;
+}
+function renderCaseResult(i, res, crits, maxWords){
+  const r = $("res"+i);
+  const total = crits.length + 1;
+  const sum = r.querySelector("summary .row");
+  sum.innerHTML = `<span class="tag a"></span><span class="tag b"></span>`;
+  sum.querySelector(".a").textContent = "A " + res.A.score + "/" + total;
+  sum.querySelector(".b").textContent = "B " + res.B.score + "/" + total;
+  const body = r.querySelector(".body"); body.innerHTML = "";
+  ["A","B"].forEach(k => {
+    const o = res[k];
+    const col = document.createElement("div"); col.className = "out";
+    col.innerHTML = `<span class="tag ${k.toLowerCase()}" style="align-self:flex-start">${k} · ${o.words} words</span><p></p><div class="checks"></div>`;
+    col.querySelector("p").textContent = o.text;
+    const ch = col.querySelector(".checks");
+    const rows = o.checks.map((c, j) => ({label: crits[j], pass: c.pass, why: c.why}));
+    rows.push({label: "Under " + maxWords + " words", pass: o.words <= maxWords, why: "Counted by code: " + o.words + " words."});
+    rows.forEach(c => {
+      const line = document.createElement("div");
+      line.innerHTML = `<span class="pill ${c.pass ? "pass" : "fail"}">${c.pass ? "Pass" : "Fail"}</span><span><span class="l"></span> <span class="r"></span></span>`;
+      line.querySelector(".l").textContent = c.label + ".";
+      line.querySelector(".r").textContent = c.why || "";
+      ch.append(line);
+    });
+    body.append(col);
+  });
+}
+
+function summarize(crits, maxWords){
+  const done = lastResults.filter(Boolean);
+  if (!done.length) return;
+  const per = crits.length + 1, max = per * done.length;
+  const sA = done.reduce((s,r) => s + r.A.score, 0), sB = done.reduce((s,r) => s + r.B.score, 0);
+  $("score").hidden = false;
+  $("fillA").style.width = (100*sA/max) + "%"; $("fillB").style.width = (100*sB/max) + "%";
+  $("numA").textContent = sA + "/" + max; $("numB").textContent = sB + "/" + max;
+  const totalRuns = lastRun.cases * lastRun.runs;
+  $("verdict").textContent = sA === sB ? "It's a tie so far." : ("Prompt " + (sA > sB ? "A" : "B") + " wins" + (done.length < totalRuns ? " so far." : "."));
+  const labels = crits.concat(["Under " + maxWords + " words"]);
+  const passCount = k => labels.map((_, j) => done.filter(r => j < crits.length ? r[k].checks[j].pass : r[k].words <= maxWords).length);
+  const pA = passCount("A"), pB = passCount("B");
+  const t = $("critTable");
+  t.innerHTML = `<thead><tr><th>Criterion</th><th style="text-align:right">A</th><th style="text-align:right">B</th></tr></thead><tbody></tbody>`;
+  const tb = t.querySelector("tbody");
+  labels.forEach((l, j) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td></td><td class="n"></td><td class="n"></td>`;
+    tr.children[0].textContent = l;
+    tr.children[1].textContent = pA[j] + "/" + done.length;
+    tr.children[2].textContent = pB[j] + "/" + done.length;
+    tb.append(tr);
+  });
+  // post
+  let gapIdx = -1, gap = 0;
+  labels.forEach((l, j) => { const g = Math.abs(pA[j] - pB[j]); if (g > gap){ gap = g; gapIdx = j; } });
+  const n = done.length, task = (state.task || "a").trim();
+  const nc = lastRun.cases, times = lastRun.runs === 1 ? "" : lastRun.runs === 2 ? ", each run twice" : `, each run ${lastRun.runs} times`;
+  const l1 = `Tried evals this week: I tested two versions of a "${task}" prompt on ${nc} test case${nc>1?"s":""}${times}, scored against a ${per}-point rubric with Claude as the grader.`;
+  let l2;
+  if (sA === sB) l2 = `Both versions tied at ${sA}/${max}, so the extra prompt structure didn't change the result for this task.`;
+  else {
+    const win = sA > sB ? "A" : "B", ws = Math.max(sA,sB), ls = Math.min(sA,sB);
+    const desc = win === "B" ? "The structured prompt (B)" : "The plain prompt (A)";
+    l2 = `${desc} won ${ws}/${max} vs ${ls}/${max}` + (gapIdx >= 0 ? `; the biggest gap was "${labels[gapIdx].toLowerCase()}" (${(win==="A"?pA:pB)[gapIdx]}/${n} vs ${(win==="A"?pB:pA)[gapIdx]}/${n}).` : ".");
+  }
+  const l3 = `I'd use this before trusting any AI workflow for job applications: test it on cases where you know the right answer first, then scale it.`;
+  $("post").value = l1 + "\n" + l2 + "\n" + l3;
+}
+
+async function run(){
+  if (!SAMPLE){ setStatus("Claude isn't available in this view. Open the page in Claude to run the eval.", true); return; }
+  const cv = state.cv.trim(), crits = state.rubric.map(s => s.trim()).filter(Boolean);
+  const base = state.cases.filter(c => c.text.trim());
+  const maxWords = state.maxWords || 80;
+  const runs = Math.min(3, Math.max(1, state.runs || 1));
+  const cases = [];
+  for (let r = 1; r <= runs; r++) base.forEach((c, i) => cases.push({name: (c.name || ("Test case " + (i+1))) + (runs > 1 ? " · run " + r : ""), text: c.text}));
+  if (!cv) return setStatus("Add a CV summary first.", true);
+  if (!cases.length) return setStatus("Add at least one test case with job post text.", true);
+  if (!crits.length) return setStatus("Add at least one rubric criterion.", true);
+  if (!state.pA.includes("{job}") || !state.pB.includes("{job}")) return setStatus("Both prompts need {job} so each test case gets inserted.", true);
+
+  ctl = new AbortController(); const signal = ctl.signal;
+  $("run").disabled = true; $("stop").hidden = false;
+  lastResults = []; $("score").hidden = true; $("post").value = "";
+  const box = $("caseResults"); box.innerHTML = "";
+  cases.forEach((c, i) => box.append(caseRow(i, c.name)));
+  lastRun = {cases: base.length, runs};
+
+  try {
+    for (let i = 0; i < cases.length; i++){
+      const job = cases[i].text.trim();
+      setStatus(`Answer ${i+1} of ${cases.length}: writing…`);
+      setCaseStatus(i, "Writing A");
+      const a = (await SAMPLE(fill(state.pA, cv, job, maxWords), {modelTier:"quick", signal, cache:false})).text.trim();
+      setCaseStatus(i, "Writing B");
+      const b = (await SAMPLE(fill(state.pB, cv, job, maxWords), {modelTier:"quick", signal, cache:false})).text.trim();
+      setCaseStatus(i, "Grading");
+      setStatus(`Answer ${i+1} of ${cases.length}: grading…`);
+      const flip = Math.random() < 0.5;
+      const g = await SAMPLE.json(gradePrompt(cv, job, crits, flip ? b : a, flip ? a : b), {signal, cache:false});
+      const gA = (flip ? g && g.Y : g && g.X) || {}, gB = (flip ? g && g.X : g && g.Y) || {};
+      const mk = (text, gr) => {
+        const checks = crits.map((_, j) => { const c = gr["c"+(j+1)] || {}; return {pass: c.pass === true, why: String(c.why || "")}; });
+        const w = words(text);
+        return {text, words: w, checks, score: checks.filter(c => c.pass).length + (w <= maxWords ? 1 : 0)};
+      };
+      lastResults[i] = {A: mk(a, gA), B: mk(b, gB)};
+      renderCaseResult(i, lastResults[i], crits, maxWords);
+      summarize(crits, maxWords);
+    }
+    setStatus("Done. Open any test case to see both answers and why each check passed or failed.");
+  } catch(e){
+    if (e && e.code === "cancelled") setStatus("Stopped. Results so far are kept.");
+    else setStatus(errCopy(e), true);
+    document.querySelectorAll("#caseResults .pill.wait").forEach(p => p.textContent = "Not run");
+  } finally {
+    $("run").disabled = false; $("stop").hidden = true; ctl = null;
+  }
+}
+$("run").onclick = run;
+$("stop").onclick = () => ctl && ctl.abort();
+$("copy").onclick = async () => {
+  const t = $("post");
+  try { await navigator.clipboard.writeText(t.value); $("copyMsg").textContent = "Copied."; }
+  catch(e){ t.focus(); t.select(); $("copyMsg").textContent = "Selected. Press copy on your keyboard."; }
+};
+
+state = load(); renderInputs();
+(async () => {
+  try { SAMPLE = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch(e){ SAMPLE = null; }
+  if (!SAMPLE){ $("run").disabled = true; setStatus("Open this page in Claude to run the eval. You can still edit everything."); }
+})();
+</script>
+
+</body></html>
