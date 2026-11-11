@@ -22,4 +22,11 @@ The eval runs through Claude's artifact runtime, so it needs to be opened as a C
 2. In Claude, open Settings, find Skills, and upload the zipped folder.
 3. Share a whitepaper and ask for a summary. Claude picks up the skill automatically.
 
+## How I built this
+
+- For the whitepaper skill, I designed the note structure and the rule that it may only use facts from the document, and must write “not stated” when something is missing. That rule comes from how I used to write research notes: inventing a team or a token metric is worse than leaving a gap.
+- I used an AI assistant to help draft and tighten the `SKILL.md` wording. I edited it so the skill stays conservative and does not pad missing facts.
+- For Prompt Eval Lab, I set the task, the two prompts, and the pass/fail rubric. Claude graded the answers without being told which prompt wrote them. Word limits are counted by code, not by the model. The structured prompt won 47/50 against 18/50 for the plain prompt, which is a much clearer separation than my later LLM-as-judge test on easy questions.
+
 Not financial advice.
+
