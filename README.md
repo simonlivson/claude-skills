@@ -7,6 +7,14 @@ Reusable [Claude Skills](https://agentskills.io/home): small folders with a `SKI
 | Skill | What it does |
 |---|---|
 | [crypto-whitepaper-summary](crypto-whitepaper-summary/SKILL.md) | Turns any crypto whitepaper into a one-page research note: what it is, how it works, token model, team and backers, risks, and a verdict. Uses only facts from the document and writes "not stated" when something is missing. |
+| [bootcamp-notebook-explainer](bootcamp-notebook-explainer/SKILL.md) | Explains a bootcamp notebook so you understand its structure: big picture, section map, cell-by-cell walkthrough, data flow, key ideas, real results, and 3 check questions. |
+| [verified-social-reply](verified-social-reply/SKILL.md) | Drafts a short X or LinkedIn reply after checking every fact against the source. Skips when the facts can't be confirmed. Draft only. |
+| [medium-article-from-repo](medium-article-from-repo/SKILL.md) | Turns a repo into a draft Medium article: result first, how it was built, what didn't work, and a table of every number with its source file. |
+| [cv-tailoring-no-invention](cv-tailoring-no-invention/SKILL.md) | Tailors a CV summary to a job post using only what the CV already says. Built from Prompt Eval Lab: 47/50 vs 18/50, and the no-invention line took the invention check from 6/10 to 10/10. |
+| [project-kickoff](project-kickoff/SKILL.md) | Starts any new project (code, research, YouTube, newsletter, startup idea) from one template, then fills in goal, audience, metrics and phases from a short interview. |
+| [research-brief](research-brief/SKILL.md) | Researches a question from 5 to 10 sources and writes a one-page brief where every claim has a link, with disagreements and gaps shown. |
+| [youtube-video-to-notes](youtube-video-to-notes/SKILL.md) | Turns a YouTube video into timestamped notes: key points, tools mentioned, steps to copy, and what to verify. |
+| [eda-quickstart](eda-quickstart/SKILL.md) | A fast, explained first look at a new dataset: quality, distributions, target balance, correlations, leakage risks and next steps. |
 
 ## Prompt Eval Lab
 
@@ -22,7 +30,7 @@ The eval runs through Claude's artifact runtime, so it needs to be opened as a C
 
 1. Download the skill folder (or zip it).
 2. In Claude, open Settings, find Skills, and upload the zipped folder.
-3. Share a whitepaper and ask for a summary. Claude picks up the skill automatically.
+3. Use it as usual (for example, share a whitepaper and ask for a summary). Claude picks up the matching skill automatically.
 
 ## How I built this
 
