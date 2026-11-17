@@ -14,6 +14,8 @@ Reusable [Claude Skills](https://agentskills.io/home): small folders with a `SKI
 
 My result: on a "tailor my CV summary to a job post" task, the structured prompt won 47/50 vs 18/50 for the plain prompt.
 
+Follow-up: a separate Gemini rerun with four prompt arms (plain, plain plus a word limit, structured, and structured without its no-invention rule) is in [gemini-rerun-2026-11](prompt-eval-lab/gemini-rerun-2026-11/).
+
 The eval runs through Claude's artifact runtime, so it needs to be opened as a Claude artifact. Opened anywhere else, the page loads and can be edited, but the Run button stays off.
 
 ## How to use

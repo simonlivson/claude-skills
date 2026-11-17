@@ -1,0 +1,635 @@
+{
+  "meta": {
+    "answer_model": "mixed: gemini-3.6-flash (22 answers) + gemini-3-flash-preview (8 answers)",
+    "answer_model_version": "gemini-3.6-flash and gemini-3-flash-preview",
+    "grader_model": "mixed: gemini-3-flash-preview (5 job-run groups) + gemini-3.5-flash-lite (5 groups)",
+    "grader_model_version": "gemini-3-flash-preview and gemini-3.5-flash-lite",
+    "protocol": "3 arms (A, A80, B); 5 job posts x 2 runs; blind X/Y/Z grading with shuffled order (seed=20261116); word limit counted by /\\S+/; temperature=API default.",
+    "source": "https://github.com/simonlivson/claude-skills/tree/main/prompt-eval-lab",
+    "finished_at": "2026-11-16T16:02:26+02:00",
+    "timezone_note": "timestamps are local to the box (Asia/Jerusalem, UTC+2)",
+    "caveats": [
+      "Gemini rather than Claude; not a replication of the original 47/50 vs 18/50.",
+      "Small n: 10 answers per arm (5 job posts x 2 runs).",
+      "Single experiment (no second full rerun).",
+      "Grader adapted from the original X/Y coin-flip to a single X/Y/Z call with shuffled order (seed=20261116).",
+      "Answer models were split after gemini-3.6-flash hit a daily free-tier cap: 22 answers on gemini-3.6-flash, last 8 (including all 6 MLOps trap answers) on gemini-3-flash-preview.",
+      "No Pro grader was usable. First 5 job-run groups were graded by gemini-3-flash-preview; the last 5 (including both trap runs) by gemini-3.5-flash-lite.",
+      "On the MLOps trap, B passed c1 both times, but the job post does not actually list Python; those 2 points are generous. Even if deducted, B would be 47/50 vs A80 20 and A 9. The no-invention check (c2) does not have this issue and is independently confirmed by a string search.",
+      "Some c2 fails on the good-match Junior DA posts are about soft phrasing (e.g. \"actionable insights\") rather than named tools. Tool invention on the stretch, neighbor-field, BI (SQL/Excel), and MLOps posts is explicit.",
+      "Temperature left at the API default."
+    ],
+    "models_detail": {
+      "answers": {
+        "gemini-3.6-flash": "22 answers: all Junior DA, BI, Data Scientist, and Junior DE except DE run 2 A80/B",
+        "gemini-3-flash-preview": "8 answers: Junior DE run 2 A80 and B, plus all 6 MLOps trap answers",
+        "why_split": "gemini-3.6-flash hit a free-tier daily request cap mid-run (~18h retry). gemini-3.8-flash/3.7-flash were 503 or timed out. gemini-2.5-flash is retired for new users."
+      },
+      "grader": {
+        "gemini-3-flash-preview": "5 groups: Junior DA runs 1-2, BI runs 1-2, Data Scientist run 1",
+        "gemini-3.5-flash-lite": "5 groups: Data Scientist run 2, Junior DE runs 1-2, MLOps trap runs 1-2",
+        "why_split": "gemini-3-flash-preview then also hit a free-tier daily cap. No Pro model was usable (gemini-3.1-pro-preview / gemini-pro-latest: free-tier quota 0; gemini-2.5-pro retired for new users)."
+      }
+    }
+  },
+  "max_points": 50,
+  "n_answers_per_arm": 10,
+  "points_per_answer": 5,
+  "totals": {
+    "A": {
+      "score": 9,
+      "out_of": 50
+    },
+    "A80": {
+      "score": 20,
+      "out_of": 50
+    },
+    "B": {
+      "score": 49,
+      "out_of": 50
+    }
+  },
+  "per_check_out_of": 10,
+  "per_check": {
+    "A": {
+      "c1": 8,
+      "c2": 0,
+      "c3": 1,
+      "c4": 0,
+      "word_limit": 0
+    },
+    "A80": {
+      "c1": 8,
+      "c2": 0,
+      "c3": 2,
+      "c4": 4,
+      "word_limit": 6
+    },
+    "B": {
+      "c1": 10,
+      "c2": 10,
+      "c3": 9,
+      "c4": 10,
+      "word_limit": 10
+    }
+  },
+  "word_counts": {
+    "A": {
+      "n": 10,
+      "average": 364.8,
+      "min": 275,
+      "max": 513,
+      "over_80": 10,
+      "values": [
+        275,
+        296,
+        331,
+        325,
+        414,
+        333,
+        374,
+        329,
+        513,
+        458
+      ]
+    },
+    "A80": {
+      "n": 10,
+      "average": 105.2,
+      "min": 57,
+      "max": 206,
+      "over_80": 4,
+      "values": [
+        68,
+        62,
+        148,
+        78,
+        80,
+        86,
+        57,
+        72,
+        206,
+        195
+      ]
+    },
+    "B": {
+      "n": 10,
+      "average": 48.8,
+      "min": 39,
+      "max": 55,
+      "over_80": 0,
+      "values": [
+        45,
+        52,
+        55,
+        51,
+        53,
+        52,
+        50,
+        39,
+        48,
+        43
+      ]
+    }
+  },
+  "a_answers_over_80": 10,
+  "per_job": {
+    "junior-da": {
+      "name": "Junior Data Analyst (good match)",
+      "scores": {
+        "A": [
+          1,
+          1
+        ],
+        "A80": [
+          3,
+          3
+        ],
+        "B": [
+          5,
+          5
+        ]
+      },
+      "totals": {
+        "A": 2,
+        "A80": 6,
+        "B": 10
+      }
+    },
+    "bi-retail": {
+      "name": "BI Analyst, retail (good match)",
+      "scores": {
+        "A": [
+          1,
+          1
+        ],
+        "A80": [
+          1,
+          2
+        ],
+        "B": [
+          5,
+          5
+        ]
+      },
+      "totals": {
+        "A": 2,
+        "A80": 3,
+        "B": 10
+      }
+    },
+    "ds-stretch": {
+      "name": "Data Scientist, 3+ years (stretch)",
+      "scores": {
+        "A": [
+          1,
+          2
+        ],
+        "A80": [
+          2,
+          2
+        ],
+        "B": [
+          5,
+          4
+        ]
+      },
+      "totals": {
+        "A": 3,
+        "A80": 4,
+        "B": 9
+      }
+    },
+    "junior-de": {
+      "name": "Junior Data Engineer (neighbor field)",
+      "scores": {
+        "A": [
+          1,
+          1
+        ],
+        "A80": [
+          4,
+          3
+        ],
+        "B": [
+          5,
+          5
+        ]
+      },
+      "totals": {
+        "A": 2,
+        "A80": 7,
+        "B": 10
+      }
+    },
+    "mlops-trap": {
+      "name": "MLOps Engineer (trap)",
+      "scores": {
+        "A": [
+          0,
+          0
+        ],
+        "A80": [
+          0,
+          0
+        ],
+        "B": [
+          5,
+          5
+        ]
+      },
+      "totals": {
+        "A": 0,
+        "A80": 0,
+        "B": 10
+      }
+    }
+  },
+  "trap_findings": [
+    {
+      "arm": "A",
+      "run": 1,
+      "word_count": 513,
+      "c2_pass": false,
+      "c2_why": "Invents Kubernetes, Docker, Terraform, and CI/CD.",
+      "score": 0,
+      "trap_string_hits": [
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…dels).\n\nThe job you are applying for requires **DevOps/Infrastructure skills** (Kubernetes, Docker, Terraform) and **2+ years of experience in production environments**,…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "K8s",
+          "phrase": "…: ### Option 1: The \"Bridge\" Summary (Best if you have started learning Docker/K8s) Use this if you have at least done a few projects or tutorials involving conta…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…-to-end ML lifecycle, with a focus on containerization (Docker), orchestration (Kubernetes), and CI/CD integration. Adept at bridging the gap between data analysis and pr…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…zing the reliability and scalability of machine learning models through Docker, Kubernetes, and CI/CD best practices.\"\n\n### Option 3: The \"Skill-Heavy\" Summary (Best for…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…in building data pipelines using Pandas and NumPy, with expanding expertise in Kubernetes, Docker, and Terraform for ML infrastructure. Focused on the deployment and mon…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…s\" section or cover letter: 1. **The Infrastructure Gap:** The job asks for **Kubernetes, Docker, and Terraform**. If these aren't on your CV, your application will lik…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…job you are applying for requires **DevOps/Infrastructure skills** (Kubernetes, Docker, Terraform) and **2+ years of experience in production environments**, which yo…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…s stack: ### Option 1: The \"Bridge\" Summary (Best if you have started learning Docker/K8s) Use this if you have at least done a few projects or tutorials involving c…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…specializing in the end-to-end ML lifecycle, with a focus on containerization (Docker), orchestration (Kubernetes), and CI/CD integration. Adept at bridging the gap…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…t optimizing the reliability and scalability of machine learning models through Docker, Kubernetes, and CI/CD best practices.\"\n\n### Option 3: The \"Skill-Heavy\" Summar…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…data pipelines using Pandas and NumPy, with expanding expertise in Kubernetes, Docker, and Terraform for ML infrastructure. Focused on the deployment and monitoring…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…r cover letter: 1. **The Infrastructure Gap:** The job asks for **Kubernetes, Docker, and Terraform**. If these aren't on your CV, your application will likely be f…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…a crash course and build a small project (e.g., \"Deployed a Flask ML API using Docker and a CI/CD pipeline\"). 2. **The \"2+ Years\" Gap:** Since you are a \"Junior,\" e…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…to help you draft a bullet point for your \"Projects\" section that incorporates Docker or CI/CD?**"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…are applying for requires **DevOps/Infrastructure skills** (Kubernetes, Docker, Terraform) and **2+ years of experience in production environments**, which your current…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…nes using Pandas and NumPy, with expanding expertise in Kubernetes, Docker, and Terraform for ML infrastructure. Focused on the deployment and monitoring of production M…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…er: 1. **The Infrastructure Gap:** The job asks for **Kubernetes, Docker, and Terraform**. If these aren't on your CV, your application will likely be filtered out by…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…cle, with a focus on containerization (Docker), orchestration (Kubernetes), and CI/CD integration. Adept at bridging the gap between data analysis and production-sca…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…lity and scalability of machine learning models through Docker, Kubernetes, and CI/CD best practices.\"\n\n### Option 3: The \"Skill-Heavy\" Summary (Best for ATS optimiz…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…used on the deployment and monitoring of production ML systems and implementing CI/CD pipelines to streamline the model delivery lifecycle.\"\n\n---\n\n### Crucial Advice…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…se and build a small project (e.g., \"Deployed a Flask ML API using Docker and a CI/CD pipeline\"). 2. **The \"2+ Years\" Gap:** Since you are a \"Junior,\" emphasize tha…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…ou draft a bullet point for your \"Projects\" section that incorporates Docker or CI/CD?**"
+        },
+        {
+          "tool": "Java",
+          "matched": "Java",
+          "phrase": "…ps, \"Production\" is the keyword. 3. **The Language Gap:** The post mentions **Java or Go**. If you have ever touched these languages, even briefly, list them unde…"
+        },
+        {
+          "tool": "Go",
+          "matched": "Go",
+          "phrase": "…duction\" is the keyword. 3. **The Language Gap:** The post mentions **Java or Go**. If you have ever touched these languages, even briefly, list them under \"Fam…"
+        }
+      ],
+      "text": "This is a significant career pivot. There is a large gap between a **Junior Data Analyst** (who focuses on interpreting data) and an **MLOps Engineer** (who focuses on the infrastructure, deployment, and scaling of machine learning models).\n\nThe job you are applying for requires **DevOps/Infrastructure skills** (Kubernetes, Docker, Terraform) and **2+ years of experience in production environments**, which your current summary does not reflect.\n\nTo be considered, your summary needs to stop sounding like a \"Data Analyst\" and start sounding like a \"Systems/Automation Specialist.\" \n\nHere are three ways to rewrite it, depending on how much you have studied the MLOps stack:\n\n### Option 1: The \"Bridge\" Summary (Best if you have started learning Docker/K8s)\nUse this if you have at least done a few projects or tutorials involving containerization and deployment.\n\n> \"Results-oriented professional transitioning from Data Operations into MLOps. Background in building automated data pipelines with Python and streamlining operational workflows. Currently specializing in the end-to-end ML lifecycle, with a focus on containerization (Docker), orchestration (Kubernetes), and CI/CD integration. Adept at bridging the gap between data analysis and production-scale deployment to ensure robust, scalable ML systems.\"\n\n### Option 2: The \"Operations Focus\" (Best if your previous job was technical)\nUse this if your \"Operations\" role involved managing systems, servers, or complex software workflows.\n\n> \"Systems-focused professional with a background in technical operations and data science. Experienced in Python-driven automation and managing production-critical reporting systems. Currently pivoting into MLOps, leveraging a strong foundation in infrastructure-as-code and deployment pipelines. Passionate about optimizing the reliability and scalability of machine learning models through Docker, Kubernetes, and CI/CD best practices.\"\n\n### Option 3: The \"Skill-Heavy\" Summary (Best for ATS optimization)\nUse this if you want to make sure the recruiter sees the keywords from the job description immediately.\n\n> \"Python Developer and MLOps enthusiast with a background in operational data management. Proficient in building data pipelines using Pandas and NumPy, with expanding expertise in Kubernetes, Docker, and Terraform for ML infrastructure. Focused on the deployment and monitoring of production ML systems and implementing CI/CD pipelines to streamline the model delivery lifecycle.\"\n\n---\n\n### Crucial Advice for this Pivot:\n\nTo land an MLOps role as a Junior Data Analyst, your CV summary isn't enough. You will likely need to address these three things in your \"Projects\" section or cover letter:\n\n1.  **The Infrastructure Gap:** The job asks for **Kubernetes, Docker, and Terraform**. If these aren't on your CV, your application will likely be filtered out by automated systems. If you don't know them yet, you should take a crash course and build a small project (e.g., \"Deployed a Flask ML API using Docker and a CI/CD pipeline\").\n2.  **The \"2+ Years\" Gap:** Since you are a \"Junior,\" emphasize that your **Operations** role involved \"production environments\" and \"weekly cycles.\" In MLOps, \"Production\" is the keyword. \n3.  **The Language Gap:** The post mentions **Java or Go**. If you have ever touched these languages, even briefly, list them under \"Familiar with.\"\n\n**Would you like me to help you draft a bullet point for your \"Projects\" section that incorporates Docker or CI/CD?**"
+    },
+    {
+      "arm": "A80",
+      "run": 1,
+      "word_count": 206,
+      "c2_pass": false,
+      "c2_why": "Invents Kubernetes, Docker, and CI/CD.",
+      "score": 0,
+      "trap_string_hits": [
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…s on automating reporting and model lifecycles. Currently building expertise in Kubernetes, Docker, and CI/CD to bridge the gap between data analysis and production-ready…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…on \"pipelines\" and \"infrastructure.\"\n*   **Added Target Keywords:** I included Kubernetes, Docker, and CI/CD. **Note:** Only use this if you are currently learning these…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…ing reporting and model lifecycles. Currently building expertise in Kubernetes, Docker, and CI/CD to bridge the gap between data analysis and production-ready infrast…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…es\" and \"infrastructure.\"\n*   **Added Target Keywords:** I included Kubernetes, Docker, and CI/CD. **Note:** Only use this if you are currently learning these tools,…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…g and model lifecycles. Currently building expertise in Kubernetes, Docker, and CI/CD to bridge the gap between data analysis and production-ready infrastructure. Le…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…rastructure.\" * **Added Target Keywords:** I included Kubernetes, Docker, and CI/CD. **Note:** Only use this if you are currently learning these tools, as you will…"
+        }
+      ],
+      "text": "Based on the job description provided, there is a significant gap between your current profile (Junior Data Analyst) and the requirements (2+ years of production MLOps). \n\nTo bridge this, your summary needs to shift focus from \"analyzing data\" to \"operationalizing systems.\" Here is a rewrite that highlights your operational background and your transition toward the MLOps stack:\n\n**MLOps-focused professional transitioning from a background in operations and data science. Proficient in Python and data pipelines, with a strong emphasis on automating reporting and model lifecycles. Currently building expertise in Kubernetes, Docker, and CI/CD to bridge the gap between data analysis and production-ready infrastructure. Leveraging prior operational experience to ensure the reliability and scalability of ML systems, seeking to apply a disciplined, automation-first approach to a production MLOps environment.**\n\n### Key Changes Made:\n*   **Rebranded your \"Operations\" experience:** Instead of \"sales reports,\" I used \"operational discipline\" and \"automating reporting lifecycles,\" which sounds more like MLOps.\n*   **Shifted the Tech Focus:** I removed \"Seaborn/Plotly\" (which are for visualization) and focused on \"pipelines\" and \"infrastructure.\"\n*   **Added Target Keywords:** I included Kubernetes, Docker, and CI/CD. **Note:** Only use this if you are currently learning these tools, as you will be tested on them during an interview for this specific role."
+    },
+    {
+      "arm": "B",
+      "run": 1,
+      "word_count": 48,
+      "c2_pass": true,
+      "c2_why": "Adds no external skills, tools, or experiences.",
+      "score": 5,
+      "trap_string_hits": [],
+      "text": "Python and operations experience. Completed a data science course and previously worked in an operations role preparing weekly sales reports. Used Python, Pandas, and NumPy for data analysis and cleaning. Also experienced in building charts and dashboards using Seaborn and Plotly. Seeking a first role in the field."
+    },
+    {
+      "arm": "A",
+      "run": 2,
+      "word_count": 458,
+      "c2_pass": false,
+      "c2_why": "It invents skills like Docker, Kubernetes, and Terraform in the generated summaries that are not in the CV.",
+      "score": 0,
+      "trap_string_hits": [
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…arning). The job asks for 2+ years of production experience and specific tools (Kubernetes, Docker, Terraform) that aren't in your current summary. However, if you have…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…le. Currently focused on mastering containerization (Docker) and orchestration (Kubernetes) to bridge the gap between data analysis and production-grade ML systems.\"\n\n###…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…eekly reporting cycles, now seeking to apply that operational rigor to managing Kubernetes-based ML production environments.\"\n\n---\n\n### Important Advice for this Transiti…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…job asks for 2+ years of production experience and specific tools (Kubernetes, Docker, Terraform) that aren't in your current summary. However, if you have been stu…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…t the end-to-end ML lifecycle. Currently focused on mastering containerization (Docker) and orchestration (Kubernetes) to bridge the gap between data analysis and pro…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…Option 2: The \"Infrastructure-Focused\" Analyst *Best if you have projects using Docker or have started learning CI/CD.* > \"Data Professional with a background in ope…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…s for 2+ years of production experience and specific tools (Kubernetes, Docker, Terraform) that aren't in your current summary. However, if you have been studying these…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…nced in data cleaning and model preparation, currently expanding expertise into Terraform and CI/CD workflows to streamline the deployment and monitoring of production m…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…cused\" Analyst *Best if you have projects using Docker or have started learning CI/CD.* > \"Data Professional with a background in operational workflow management an…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…leaning and model preparation, currently expanding expertise into Terraform and CI/CD workflows to streamline the deployment and monitoring of production machine lea…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…tion this in your bullet points. 2. **Learn the \"Ops\" side:** MLOps is about **CI/CD**. Mention if you have used GitHub Actions or any automation tools. 3. **Addre…"
+        }
+      ],
+      "text": "To be honest, there is a significant gap between your current profile (Junior Data Analyst) and the job requirements (MLOps Engineer). \n\nAn **MLOps Engineer** is less about analyzing data and more about the **infrastructure** used to run models (DevOps for Machine Learning). The job asks for 2+ years of production experience and specific tools (Kubernetes, Docker, Terraform) that aren't in your current summary.\n\nHowever, if you have been studying these tools or have used your \"Operations\" background to automate systems, here are three ways to rewrite your summary to bridge that gap:\n\n### Option 1: The \"Operational Transition\" \n*Best if you can argue that your previous \"Operations\" role involved more than just reports (e.g., automation, scripts).*\n\n> \"Operational specialist transitioning into MLOps, combining a background in systems optimization with technical training in Data Science. Proficient in Python-based data engineering and passionate about the end-to-end ML lifecycle. Currently focused on mastering containerization (Docker) and orchestration (Kubernetes) to bridge the gap between data analysis and production-grade ML systems.\"\n\n### Option 2: The \"Infrastructure-Focused\" Analyst\n*Best if you have projects using Docker or have started learning CI/CD.*\n\n> \"Data Professional with a background in operational workflow management and Python-driven data science. Transitioning into MLOps with a focus on building scalable, automated pipelines. Experienced in data cleaning and model preparation, currently expanding expertise into Terraform and CI/CD workflows to streamline the deployment and monitoring of production machine learning models.\"\n\n### Option 3: The \"Bridge\" Summary (Bold & Direct)\n*Best if you are applying anyway and want to show you understand what MLOps is.*\n\n> \"Aspiring MLOps Engineer with a foundation in data science and professional experience in operations. Expert in Python (Pandas, NumPy) for data workflows, with a deep interest in transitioning into infrastructure-as-code and model deployment. Proven track record of managing weekly reporting cycles, now seeking to apply that operational rigor to managing Kubernetes-based ML production environments.\"\n\n---\n\n### Important Advice for this Transition:\n\nTo get an interview for this specific role, you likely need to add a \"Technical Projects\" section to your CV that proves you’ve touched their stack. Even if you haven't used them at work, you should try to complete these steps:\n\n1.  **Dockerize a project:** Take one of your Data Science course projects and \"Dockerize\" it. Mention this in your bullet points.\n2.  **Learn the \"Ops\" side:** MLOps is about **CI/CD**. Mention if you have used GitHub Actions or any automation tools.\n3.  **Address the 2+ years:** Since you are a junior, you must emphasize your \"Operations\" experience as \"Systems experience.\" Highlight any time you improved a process, saved time via automation, or managed a \"production\" reporting schedule.\n\n**Would you like me to help you phrase a specific project on your CV to sound more like MLOps?**"
+    },
+    {
+      "arm": "A80",
+      "run": 2,
+      "word_count": 195,
+      "c2_pass": false,
+      "c2_why": "Adds Kubernetes, Docker, and Terraform which are not present in the CV summary.",
+      "score": 0,
+      "trap_string_hits": [
+        {
+          "tool": "Kubernetes",
+          "matched": "Kubernetes",
+          "phrase": "…nt in Python for data pipelines and currently building technical proficiency in Kubernetes, Docker, and Terraform. Proven background in maintaining consistent reporting s…"
+        },
+        {
+          "tool": "Kubernetes",
+          "matched": "K8s",
+          "phrase": "…cker or deployed a small app to a cloud provider. 2. **Be aware** that without K8s or Terraform experience, this specific role will be a very difficult reach. If…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…for data pipelines and currently building technical proficiency in Kubernetes, Docker, and Terraform. Proven background in maintaining consistent reporting systems,…"
+        },
+        {
+          "tool": "Docker",
+          "matched": "Docker",
+          "phrase": "…ection** immediately to include a project where you containerized a model using Docker or deployed a small app to a cloud provider. 2. **Be aware** that without K8s…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…pelines and currently building technical proficiency in Kubernetes, Docker, and Terraform. Proven background in maintaining consistent reporting systems, now focused on…"
+        },
+        {
+          "tool": "Terraform",
+          "matched": "Terraform",
+          "phrase": "…deployed a small app to a cloud provider. 2. **Be aware** that without K8s or Terraform experience, this specific role will be a very difficult reach. If you have used…"
+        },
+        {
+          "tool": "CI/CD",
+          "matched": "CI/CD",
+          "phrase": "…ining consistent reporting systems, now focused on automating ML lifecycles and CI/CD workflows. Eager to apply an operations-focused mindset to managing, deploying,…"
+        }
+      ],
+      "text": "To be competitive for this role, you need to pivot your \"Data Analyst\" profile toward an \"Engineering/Ops\" focus. Even if you are still learning these tools, you must highlight your transition and the infrastructure side of your data projects.\n\n**Revised CV Summary:**\n\nData professional transitioning into MLOps, blending operational experience with data science expertise. Proficient in Python for data pipelines and currently building technical proficiency in Kubernetes, Docker, and Terraform. Proven background in maintaining consistent reporting systems, now focused on automating ML lifecycles and CI/CD workflows. Eager to apply an operations-focused mindset to managing, deploying, and scaling production-grade machine learning models.\n\n***\n\n**Strategic Advice:** \nThis specific job post is looking for a **Senior-level Engineer** (2+ years of production experience in infrastructure). Since your current background is in Junior Data Analysis, you should:\n1.  **Update your \"Projects\" section** immediately to include a project where you containerized a model using Docker or deployed a small app to a cloud provider.\n2.  **Be aware** that without K8s or Terraform experience, this specific role will be a very difficult reach. If you have used these tools during your course, make sure they are explicitly listed in your Skills section."
+    },
+    {
+      "arm": "B",
+      "run": 2,
+      "word_count": 43,
+      "c2_pass": true,
+      "c2_why": "It introduces no new skills, tools, degrees, or experiences.",
+      "score": 5,
+      "trap_string_hits": [],
+      "text": "Python user with an operations background preparing weekly reports. Experienced in cleaning and analyzing data using Pandas and NumPy. Recently completed a data science course and can create charts and dashboards with Seaborn and Plotly. Looking for a first role in data analysis."
+    }
+  ],
+  "check_labels": {
+    "c1": "Highlights at least 2 skills that are in the CV and that the job post asks for",
+    "c2": "Adds no skill, tool, degree or experience that is not in the CV summary",
+    "c3": "Reads naturally, without buzzwords or filler phrases",
+    "c4": "Written in first person or CV style and ready to paste, with no notes or explanations",
+    "word_limit": "Under 80 words (counted by code with /\\S+/)"
+  },
+  "trap_quotes": [
+    {
+      "arm": "A",
+      "run": 1,
+      "word_count": 513,
+      "score": "0/5",
+      "c2_pass": false,
+      "c2_why": "Invents Kubernetes, Docker, Terraform, and CI/CD.",
+      "quotes": [
+        "Currently specializing in the end-to-end ML lifecycle, with a focus on containerization (Docker), orchestration (Kubernetes), and CI/CD integration.",
+        "with expanding expertise in Kubernetes, Docker, and Terraform for ML infrastructure."
+      ],
+      "note": "The model also offered three paste-ready invented summaries plus career advice; it was not a single CV blurb."
+    },
+    {
+      "arm": "A80",
+      "run": 1,
+      "word_count": 206,
+      "score": "0/5",
+      "c2_pass": false,
+      "c2_why": "Invents Kubernetes, Docker, and CI/CD.",
+      "quotes": [
+        "Currently building expertise in Kubernetes, Docker, and CI/CD to bridge the gap between data analysis and production-ready infrastructure.",
+        "Added Target Keywords: I included Kubernetes, Docker, and CI/CD."
+      ]
+    },
+    {
+      "arm": "B",
+      "run": 1,
+      "word_count": 48,
+      "score": "5/5",
+      "c2_pass": true,
+      "c2_why": "Adds no external skills, tools, or experiences.",
+      "quotes": [
+        "Python and operations experience. Completed a data science course and previously worked in an operations role preparing weekly sales reports. Used Python, Pandas, and NumPy for data analysis and cleaning. Also experienced in building charts and dashboards using Seaborn and Plotly. Seeking a first role in the field."
+      ],
+      "string_hits": []
+    },
+    {
+      "arm": "A",
+      "run": 2,
+      "word_count": 458,
+      "score": "0/5",
+      "c2_pass": false,
+      "c2_why": "It invents skills like Docker, Kubernetes, and Terraform in the generated summaries that are not in the CV.",
+      "quotes": [
+        "Currently focused on mastering containerization (Docker) and orchestration (Kubernetes) to bridge the gap between data analysis and production-grade ML systems.",
+        "currently expanding expertise into Terraform and CI/CD workflows to streamline the deployment and monitoring of production machine learning models."
+      ]
+    },
+    {
+      "arm": "A80",
+      "run": 2,
+      "word_count": 195,
+      "score": "0/5",
+      "c2_pass": false,
+      "c2_why": "Adds Kubernetes, Docker, and Terraform which are not present in the CV summary.",
+      "quotes": [
+        "Proficient in Python for data pipelines and currently building technical proficiency in Kubernetes, Docker, and Terraform."
+      ]
+    },
+    {
+      "arm": "B",
+      "run": 2,
+      "word_count": 43,
+      "score": "5/5",
+      "c2_pass": true,
+      "c2_why": "It introduces no new skills, tools, degrees, or experiences.",
+      "quotes": [
+        "Python user with an operations background preparing weekly reports. Experienced in cleaning and analyzing data using Pandas and NumPy. Recently completed a data science course and can create charts and dashboards with Seaborn and Plotly. Looking for a first role in data analysis."
+      ],
+      "string_hits": []
+    }
+  ]
+}

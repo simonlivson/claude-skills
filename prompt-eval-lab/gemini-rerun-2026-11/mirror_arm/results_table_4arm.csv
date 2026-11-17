@@ -1,0 +1,13 @@
+section,item,A,A80,B,Bm
+total,score_out_of_50,9,20,49,43
+per_check,c1,8,8,10,8
+per_check,c2,0,0,10,6
+per_check,c3,1,2,9,9
+per_check,c4,0,4,10,10
+per_check,word_limit,0,6,10,10
+per_job,junior-da,2,6,10,10
+per_job,bi-retail,2,3,10,9
+per_job,ds-stretch,3,4,9,10
+per_job,junior-de,2,7,10,9
+per_job,mlops-trap,0,0,10,5
+word_count,average,364.8,105.2,48.8,46.9

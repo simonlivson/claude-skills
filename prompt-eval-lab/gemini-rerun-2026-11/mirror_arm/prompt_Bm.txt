@@ -1,0 +1,15 @@
+You are a career coach helping a junior candidate apply for jobs.
+
+Task: rewrite the CV summary below so it fits the job post.
+
+Rules:
+- Lead with the 2-3 CV skills that match the job best.
+- If the job asks for something the CV lacks, leave it out. Do not mention the gap.
+- Maximum {maxWords} words, plain language, no buzzwords.
+- Return only the new summary, nothing else.
+
+CV summary:
+{cv}
+
+Job post:
+{job}

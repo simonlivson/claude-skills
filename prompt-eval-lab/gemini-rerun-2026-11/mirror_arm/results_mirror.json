@@ -1,0 +1,158 @@
+{
+  "totals_out_of_50": {
+    "A": 9,
+    "A80": 20,
+    "B": 49,
+    "Bm": 43
+  },
+  "per_check_out_of_10": {
+    "A": {
+      "c1": 8,
+      "c2": 0,
+      "c3": 1,
+      "c4": 0,
+      "word_limit": 0
+    },
+    "A80": {
+      "c1": 8,
+      "c2": 0,
+      "c3": 2,
+      "c4": 4,
+      "word_limit": 6
+    },
+    "B": {
+      "c1": 10,
+      "c2": 10,
+      "c3": 9,
+      "c4": 10,
+      "word_limit": 10
+    },
+    "Bm": {
+      "c1": 8,
+      "c2": 6,
+      "c3": 9,
+      "c4": 10,
+      "word_limit": 10
+    }
+  },
+  "per_job_out_of_10": {
+    "junior-da": {
+      "A": 2,
+      "A80": 6,
+      "B": 10,
+      "Bm": 10
+    },
+    "bi-retail": {
+      "A": 2,
+      "A80": 3,
+      "B": 10,
+      "Bm": 9
+    },
+    "ds-stretch": {
+      "A": 3,
+      "A80": 4,
+      "B": 9,
+      "Bm": 10
+    },
+    "junior-de": {
+      "A": 2,
+      "A80": 7,
+      "B": 10,
+      "Bm": 9
+    },
+    "mlops-trap": {
+      "A": 0,
+      "A80": 0,
+      "B": 10,
+      "Bm": 5
+    }
+  },
+  "word_counts": {
+    "A": {
+      "avg": 364.8,
+      "min": 275,
+      "max": 513,
+      "over_80": 10
+    },
+    "A80": {
+      "avg": 105.2,
+      "min": 57,
+      "max": 206,
+      "over_80": 4
+    },
+    "B": {
+      "avg": 48.8,
+      "min": 39,
+      "max": 55,
+      "over_80": 0
+    },
+    "Bm": {
+      "avg": 46.9,
+      "min": 41,
+      "max": 58,
+      "over_80": 0
+    }
+  },
+  "mlops_trap_answers_naming_a_missing_tool_out_of_2": {
+    "A": 2,
+    "A80": 2,
+    "B": 0,
+    "Bm": 0
+  },
+  "grader_consistency_regrade_nov17": {
+    "A": {
+      "nov16": 9,
+      "nov17": 8,
+      "c2_nov16": 0,
+      "c2_nov17": 0
+    },
+    "B": {
+      "nov16": 49,
+      "nov17": 48,
+      "c2_nov16": 10,
+      "c2_nov17": 10
+    }
+  },
+  "bm_models": {
+    "junior-da|1|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3-flash-preview"
+    },
+    "junior-da|2|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3-flash-preview"
+    },
+    "bi-retail|1|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3-flash-preview"
+    },
+    "bi-retail|2|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3-flash-preview"
+    },
+    "ds-stretch|1|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3-flash-preview"
+    },
+    "ds-stretch|2|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3.5-flash-lite"
+    },
+    "junior-de|1|Bm": {
+      "answer": "gemini-3.6-flash",
+      "grader": "gemini-3.5-flash-lite"
+    },
+    "junior-de|2|Bm": {
+      "answer": "gemini-3-flash-preview",
+      "grader": "gemini-3.5-flash-lite"
+    },
+    "mlops-trap|1|Bm": {
+      "answer": "gemini-3-flash-preview",
+      "grader": "gemini-3.5-flash-lite"
+    },
+    "mlops-trap|2|Bm": {
+      "answer": "gemini-3-flash-preview",
+      "grader": "gemini-3.5-flash-lite"
+    }
+  }
+}
