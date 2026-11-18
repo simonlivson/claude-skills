@@ -23,6 +23,8 @@ A reply that is short, natural and true. Checking comes before writing.
 5. **Draft.** X: under about 200 characters where possible. LinkedIn: 1 to 3 short sentences. Plain words, no hashtags unless asked, at most one emoji and usually none.
 6. **Show the evidence.** Under the draft, list what was checked and where.
 
+See `references/examples.md` for sample good and skip outputs (fictional posts, not the user's).
+
 ## Output format
 ```
 Reply (draft):

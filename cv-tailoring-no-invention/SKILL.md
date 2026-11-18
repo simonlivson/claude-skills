@@ -33,6 +33,8 @@ This is the structured prompt from my Prompt Eval Lab, turned into a skill.
 4. **Self-check before answering:** compare every skill, tool, title and number in the new summary against the CV. Remove anything not in it. Count the words.
 5. After the summary, give a short separate note (only if the user wants it) listing job requirements the CV doesn't cover, so the user can decide what to do. Never put those in the summary.
 
+See `references/examples.md` for a sample good summary and a bad invented one (fictional CV, not the user's).
+
 ## Output format
 - The tailored summary as plain text, ready to paste.
 - Optional, below a line: "Not in your CV (left out): ..." and the word count.
