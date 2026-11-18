@@ -15,6 +15,7 @@ Reusable [Claude Skills](https://agentskills.io/home): small folders with a `SKI
 | [research-brief](research-brief/SKILL.md) | Researches a question from 5 to 10 sources and writes a one-page brief where every claim has a link, with disagreements and gaps shown. |
 | [youtube-video-to-notes](youtube-video-to-notes/SKILL.md) | Turns a YouTube video into timestamped notes: key points, tools mentioned, steps to copy, and what to verify. |
 | [eda-quickstart](eda-quickstart/SKILL.md) | A fast, explained first look at a new dataset: quality, distributions, target balance, correlations, leakage risks and next steps. |
+| [model-router](model-router/SKILL.md) | Picks the right tool and model for the task (Claude Code, Codex CLI, or Gemini CLI), shows how to switch models, save usage, and hand work between tools. |
 
 ## Prompt Eval Lab
 
